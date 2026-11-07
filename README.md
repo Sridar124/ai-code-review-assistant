@@ -184,3 +184,7 @@ Secret masking uses pattern-based detection and is not a guarantee that every po
 **Sridar L S**
 
 GitHub: https://github.com/Sridar124
+## Project Screenshot
+![AI Code Review Result](screenshots/code-review-result.png)
+
+![AI Code Review Details](screenshots/code-review-details.png)
