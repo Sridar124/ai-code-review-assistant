@@ -1,106 +1,82 @@
-
 # AI Code Review Assistant
 
-An AI-powered code review application built with Java and Spring Boot that analyzes source code for bugs, security vulnerabilities, performance issues, code quality, and algorithm complexity.
+An AI-powered Code Review Assistant developed using Java, Spring Boot, and Groq AI. This application analyzes submitted source code and generates intelligent feedback to help developers identify issues and improve code quality.
 
 ## Features
 
-- AI-powered source code analysis using Groq API
-- Automatic bug and performance issue detection
-- Security vulnerability detection
-- SQL Injection identification and remediation suggestions
-- Time and space complexity analysis
-- Code quality scoring
-- Corrected source code generation
-- Secret masking for sensitive credentials
-- Rule-based code review suggestions
-- Input validation and structured error responses
-- Automated unit testing
+- AI-powered source code analysis
+- Automated code quality evaluation
+- Code quality score
+- Bug identification and suggestions
+- Performance analysis
+- Security recommendations
+- Code improvement suggestions
+- Corrected code recommendations
+- REST API integration
 
-## Tech Stack
+## Technologies Used
 
 | Technology | Purpose |
 |---|---|
-| Java 21 | Backend programming |
-| Spring Boot | REST API development |
-| Maven | Dependency management |
-| Groq API | AI-powered code analysis |
-| Jackson | JSON processing |
-| Postman | API testing |
-| JUnit 5 | Unit testing |
-| Mockito | Service-layer testing |
-| Git & GitHub | Version control |
+| Java | Backend Programming |
+| Spring Boot | Backend Framework |
+| Groq AI | AI Integration |
+| REST API | API Communication |
+| Maven | Build Tool |
+| Postman | API Testing |
+| Git & GitHub | Version Control |
 
-## Project Architecture
+## Project Screenshots
 
-```text
-ai-code-review/
-├── src/
-│   ├── main/
-│   │   ├── java/com/sridar/codereview/
-│   │   │   ├── controller/
-│   │   │   ├── dto/
-│   │   │   ├── exception/
-│   │   │   ├── rules/
-│   │   │   ├── security/
-│   │   │   └── service/
-│   │   └── resources/
-│   │       └── application.properties
-│   └── test/
-│       └── java/com/sridar/codereview/
-│           ├── security/
-│           └── service/
-├── pom.xml
-└── README.md
-```
+### 1. API Review Result
 
-## Configuration
+![AI Code Review Result](screenshots/code-review-result.png)
 
-Requirements:
-- Java 21
-- Maven
-- Groq API key
+### 2. Detailed Code Review
 
-Set your Groq API key as an environment variable.
+![AI Code Review Details](screenshots/code-review-details.png)
 
-Windows PowerShell:
+## Installation and Setup
 
-```powershell
-$env:GROQ_API_KEY="your_api_key"
-```
+### Prerequisites
 
-The application uses the following configuration:
+- Java JDK 17 or above
+- Git
+- Groq API Key
 
-```properties
-spring.application.name=ai-code-review
-groq.api.url=https://api.groq.com/openai/v1/chat/completions
-groq.api.key=${GROQ_API_KEY}
-groq.api.model=openai/gpt-oss-20b
-```
-
-Never commit your API key or other credentials to GitHub.
-
-## Run the Application
-
-Clone the repository:
+### Step 1: Clone the Repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/Sridar124/ai-code-review-assistant.git
+
+cd ai-code-review-assistant
 ```
 
-Navigate to the project:
+### Step 2: Configure Groq API Key
 
-```bash
-cd ai-code-review
-```
+Create an API key through the Groq platform and configure it as an environment variable.
 
-Run using Maven:
+For Windows PowerShell:
 
 ```powershell
+setx GROQ_API_KEY "your_actual_groq_api_key"
+```
+
+Replace the placeholder with your actual API key.
+
+Restart the terminal after setting the environment variable.
+
+**Important:** Never upload your actual API key or credentials to GitHub.
+
+### Step 3: Run the Application
+
+Execute the following command in the project directory:
+
+```bash
 .\mvnw.cmd spring-boot:run
 ```
 
-Application runs at:
+The application will start at:
 
 ```text
 http://localhost:8080
@@ -108,83 +84,52 @@ http://localhost:8080
 
 ## API Documentation
 
-### Review Source Code
+### Code Review API
 
-**Endpoint**
+| Property | Value |
+|---|---|
+| HTTP Method | POST |
+| Endpoint | `/api/reviews` |
+| Content-Type | `application/json` |
 
-```http
-POST /api/reviews
-```
-
-**Request URL**
-
-```text
-http://localhost:8080/api/reviews
-```
-
-**Request Body**
+### Sample Request
 
 ```json
 {
   "language": "Java",
-  "code": "public class Demo { public static void main(String[] args) { System.out.println(\"Hello World\"); } }"
+  "code": "public class Main { public static void main(String[] args) { System.out.println(\"Hello World\"); } }"
 }
 ```
 
-**Response includes:**
+### Testing with Postman
 
-- Code review summary
-- Quality score
-- Time and space complexity
-- Detected bugs
-- Performance issues
-- Security findings
-- Code quality observations
-- Improvement suggestions
-- Corrected source code
+1. Start the Spring Boot application.
+2. Open Postman.
+3. Select the POST method.
+4. Enter `http://localhost:8080/api/reviews`.
+5. Select Body → raw → JSON.
+6. Paste the sample request.
+7. Click Send to receive the AI-generated code review.
 
-## Validation
+### Sample API Response
 
-- Language is required.
-- Source code cannot be empty.
-- Maximum source code length: 20,000 characters.
-- Invalid requests return HTTP 400.
-
-## Testing
-
-Run automated tests:
-
-```powershell
-.\mvnw.cmd test
-```
-
-The project includes tests for secret masking and service-layer suggestion aggregation.
-
-## Security
-
-- API credentials are supplied through environment variables.
-- Sensitive values are masked before AI processing.
-- Known source-code secrets are additionally masked in AI output.
-- SQL Injection risks are identified with remediation suggestions.
-- Input validation protects the review endpoint.
-
-Secret masking uses pattern-based detection and is not a guarantee that every possible secret format will be detected.
+The API returns an AI-generated code review in JSON format, including the analysis and recommendations. Refer to the project screenshots for an actual successful API response.
 
 ## Future Enhancements
 
-- Support for additional programming languages
-- More comprehensive static code analysis
-- Authentication and authorization
-- Code review history
-- Frontend dashboard
-- Cloud deployment
+- Support for multiple programming languages.
+- Advanced code security analysis.
+- Improved code quality metrics.
+- Enhanced code review reports.
+- Additional AI-powered development features.
 
 ## Author
 
-**Sridar L S**
+**SRIDAR L S**
 
-GitHub: https://github.com/Sridar124
-## Project Screenshot
-![AI Code Review Result](screenshots/code-review-result.png)
+- GitHub: [Sridar124](https://github.com/Sridar124)
+- Project Repository: [AI Code Review Assistant](https://github.com/Sridar124/ai-code-review-assistant)
 
-![AI Code Review Details](screenshots/code-review-details.png)
+---
+
+*Developed as a practical project to explore Java backend development and AI integration.*
