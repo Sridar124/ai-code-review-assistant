@@ -1,48 +1,124 @@
+
 # AI Code Review Assistant
 
-An AI-powered Code Review Assistant developed using Java, Spring Boot, and Groq AI. This application analyzes submitted source code and generates intelligent feedback to help developers identify issues and improve code quality.
+An AI-powered code review backend built using Java, Spring Boot, and the Groq API. It accepts source code through a REST API and generates structured code review reports with actionable recommendations.
 
 ## Features
 
-- AI-powered source code analysis
-- Automated code quality evaluation
-- Code quality score
-- Bug identification and suggestions
-- Performance analysis
-- Security recommendations
-- Code improvement suggestions
-- Corrected code recommendations
-- REST API integration
+- AI-powered source code analysis using Groq API
+- Automated code quality scoring
+- Potential bug identification
+- Time and space complexity analysis
+- Performance issue detection
+- Security vulnerability analysis
+- Corrected code generation
+- Actionable code improvement suggestions
+- Structured JSON API responses
+- Rule-based checks for TODO comments and System.out.println statements
+- Credential masking before sending source code to the AI service
+- Request validation and error handling
 
 ## Technologies Used
 
 | Technology | Purpose |
 |---|---|
-| Java | Backend Programming |
+| Java 21 | Backend Programming |
 | Spring Boot | Backend Framework |
-| Groq AI | AI Integration |
+| Groq API | AI Integration |
 | REST API | API Communication |
+| Jackson | JSON Processing |
 | Maven | Build Tool |
+| Jakarta Validation | Request Validation |
 | Postman | API Testing |
 | Git & GitHub | Version Control |
 
-## Project Screenshots
+## How It Works
 
-### 1. API Review Result
+1. The client submits source code and its programming language through the REST API.
+2. Spring Boot validates the incoming request.
+3. Rule-based checks identify TODO markers and System.out.println usage.
+4. Recognized credential patterns are masked before external AI processing.
+5. The Groq API analyses the submitted source code using a structured review prompt.
+6. The AI response is parsed into Java response models.
+7. AI-generated suggestions and rule-based suggestions are combined.
+8. The application returns the final code review as a JSON response.
 
-![AI Code Review Result](screenshots/code-review-result.png)
+## Code Review Capabilities
 
-### 2. Detailed Code Review
+The AI review generates:
 
-![AI Code Review Details](screenshots/code-review-details.png)
+- Code quality score
+- Review summary
+- Potential bugs
+- Time and space complexity analysis
+- Performance observations
+- Security findings with severity and recommendations
+- Code quality observations
+- Improvement suggestions
+- Corrected source code
+
+The analysis is AI-generated and should be reviewed by developers before applying suggested changes.
+
+## Security
+
+- Recognizes common credential patterns such as API keys, passwords and tokens.
+- Masks recognized secrets before sending submitted code to the Groq API.
+- Masks recognized original secrets in generated review output.
+- Treats submitted source code as untrusted input in the AI review prompt.
+- Uses an environment variable for Groq API authentication.
+
+**Note:** Secret masking is pattern-based and is not a substitute for a dedicated secrets scanner.
+
+## API Documentation
+
+### Code Review Endpoint
+
+| Property | Value |
+|---|---|
+| HTTP Method | POST |
+| Endpoint | `/api/reviews` |
+| Content-Type | `application/json` |
+| Server | `http://localhost:8080` |
+
+### Sample Request
+
+```json
+{
+  "language": "Java",
+  "code": "public class Main { public static void main(String[] args) { System.out.println(\"Hello World\"); } }"
+}
+```
+
+### Response Structure
+
+The API returns a JSON response containing:
+
+- `language`
+- `summary`
+- `qualityScore`
+- `complexityAnalysis`
+- `bugs`
+- `performanceIssues`
+- `securityFindings`
+- `codeQuality`
+- `suggestions`
+- `correctedCode`
+
+### Request Validation
+
+- Language is required.
+- Code is required and cannot be blank.
+- Language length is limited to 50 characters.
+- Source code length is limited to 20,000 characters.
+- Invalid requests return HTTP 400 Bad Request.
 
 ## Installation and Setup
 
 ### Prerequisites
 
-- Java JDK 17 or above
+- Java JDK 21
 - Git
-- Groq API Key
+- Groq API key
 
 ### Step 1: Clone the Repository
 
@@ -54,74 +130,83 @@ cd ai-code-review-assistant
 
 ### Step 2: Configure Groq API Key
 
-Create an API key through the Groq platform and configure it as an environment variable.
+Set your Groq API key as an environment variable.
 
 For Windows PowerShell:
 
 ```powershell
-setx GROQ_API_KEY "your_actual_groq_api_key"
+$env:GROQ_API_KEY = "your_groq_api_key"
 ```
 
-Replace the placeholder with your actual API key.
+Keep the key private. Never commit API credentials to GitHub.
 
-Restart the terminal after setting the environment variable.
+### Step 3: Run Tests
 
-**Important:** Never upload your actual API key or credentials to GitHub.
+```powershell
+.\mvnw.cmd test
+```
 
-### Step 3: Run the Application
+### Step 4: Start the Application
 
-Execute the following command in the project directory:
-
-```bash
+```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-The application will start at:
+The application starts at:
 
 ```text
 http://localhost:8080
 ```
 
-## API Documentation
+## Testing and Verification
 
-### Code Review API
+### Automated Tests
 
-| Property | Value |
+Latest local test execution:
+
+| Metric | Result |
+|---|---:|
+| Tests run | 11 |
+| Failures | 0 |
+| Errors | 0 |
+| Skipped | 0 |
+| Build status | BUILD SUCCESS |
+
+### Manual API Verification
+
+The following scenarios were tested using Postman:
+
+| Test Scenario | Result |
 |---|---|
-| HTTP Method | POST |
-| Endpoint | `/api/reviews` |
-| Content-Type | `application/json` |
+| Java code review | Passed |
+| Python code review | Passed |
+| SQL injection detection | Passed |
+| Safe SQL query recognition | Passed |
+| Complexity and performance analysis | Passed |
+| HashSet optimization in corrected code | Passed |
+| Hardcoded credential detection and masking | Passed |
+| TODO and logging suggestions | Passed |
+| Blank input validation | HTTP 400 |
+| Sample prompt-injection attempt | Passed |
 
-### Sample Request
+Java and Python were manually tested. A single Python review request returned in approximately 2.45 seconds; this is an individual observation, not a performance benchmark.
 
-```json
-{
-  "language": "Java",
-  "code": "public class Main { public static void main(String[] args) { System.out.println(\"Hello World\"); } }"
-}
-```
+## Project Screenshots
 
-### Testing with Postman
+### 1. API Review Result
 
-1. Start the Spring Boot application.
-2. Open Postman.
-3. Select the POST method.
-4. Enter `http://localhost:8080/api/reviews`.
-5. Select Body → raw → JSON.
-6. Paste the sample request.
-7. Click Send to receive the AI-generated code review.
+![AI Code Review Result](screenshots/code-review-result.png)
 
-### Sample API Response
+### 2. Detailed Code Review
 
-The API returns an AI-generated code review in JSON format, including the analysis and recommendations. Refer to the project screenshots for an actual successful API response.
+![AI Code Review Details](screenshots/code-review-details.png)
 
-## Future Enhancements
+## Current Limitations
 
-- Support for multiple programming languages.
-- Advanced code security analysis.
-- Improved code quality metrics.
-- Enhanced code review reports.
-- Additional AI-powered development features.
+- The project currently exposes a REST API and does not include a separate frontend UI.
+- AI-generated analysis may vary between requests.
+- AI findings and corrected code should be independently reviewed before production use.
+- The application does not automatically execute or apply generated corrected code.
 
 ## Author
 
@@ -132,4 +217,4 @@ The API returns an AI-generated code review in JSON format, including the analys
 
 ---
 
-*Developed as a practical project to explore Java backend development and AI integration.*
+Developed as a practical project demonstrating Java backend development, REST API design, and AI integration.
